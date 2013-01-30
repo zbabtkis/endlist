@@ -1,6 +1,6 @@
 body {
 	margin: 0;
-	background-color: #171717;
+	background-color: #ebebeb;
 	font-family: Helvetica, Georgia, sans-serif;
 }
 header{
@@ -19,7 +19,7 @@ nav {
 	top: 70px;
 	bottom: 0;
 	background-color: #242424;
-	width: 20%;
+	width: 250px;
 	height: 100%;
 	overflow: scroll;
 	z-index: 1;
@@ -42,6 +42,7 @@ nav ul {
 	width: 35px;
 	height: 35px;
 	margin: 15px 0 0 15px;
+	cursor: pointer;
 }
 #content {
 	padding: 100px 0 0 0;
@@ -56,7 +57,7 @@ a {
 .masonry-item {
 	width: 230px;
 	overflow: scroll;
-	background-color: #dbdbdb;
+	background-color: #dfdfdf;
 	border-radius: 10px;
 	margin-bottom: 10px;
 	color: #05768c;
@@ -73,7 +74,13 @@ a {
 	width: 100%;
 }
 .IN-widget {
-	position: absolute;
-	top: 20px;
-	right: 20px;
+	margin-top: 10px;
+}
+
+@media only screen and (max-device-width: 480px) {
+	nav li {
+		padding:5px 0 5px 0;
+		background-color: #04819e;
+		border-bottom: 1px solid white;
+	}
 }

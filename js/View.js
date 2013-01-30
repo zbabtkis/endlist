@@ -205,7 +205,6 @@ $(function () {
 			this.$el = $('header');
 			this.$el.append(new ButtonView().$el);
 			this.$el.append(new TitleView({title: "endlist"}).$el);
-			this.$el.append(new LinkedInLoginView().$el);
 		},
 		events: {
 			'click .toggle-nav': 'openNavRequest'
@@ -243,6 +242,7 @@ $(function () {
 			this.$el = $('nav');
 			this.listView = new NavListView();
 			this.$el.html(this.listView.$el);
+			this.$el.prepend(new LinkedInLoginView().$el);
 			nav = this;
 		},
 		open: function() {
