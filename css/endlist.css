@@ -1,0 +1,79 @@
+body {
+	margin: 0;
+	background-color: #171717;
+	font-family: Helvetica, Georgia, sans-serif;
+}
+header{
+	text-align: center;
+	position: fixed;
+	top: 0;
+	height: 70px;
+	width: 100%;
+	background-color: #59cfe6;
+	z-index: 2;
+	box-shadow: 2px 2px 0px 2px #04819e;
+}
+
+nav {
+	position: fixed;
+	top: 70px;
+	bottom: 0;
+	background-color: #242424;
+	width: 20%;
+	height: 100%;
+	overflow: scroll;
+	z-index: 1;
+	color: white;
+	box-shadow: 2px 2px 0px 2px black;
+}
+
+nav ul {
+	list-style: none;
+	padding:2px;
+}
+
+.site-title {
+	color: white;
+	margin-top: 10px;
+}
+.toggle-nav {
+	float: left;
+	background: url('img/mobile_menu.png');
+	width: 35px;
+	height: 35px;
+	margin: 15px 0 0 15px;
+}
+#content {
+	padding: 100px 0 0 0;
+	margin: 0;
+	height: 90%;
+	z-index: 3;
+}
+a {
+	color: ;
+}
+
+.masonry-item {
+	width: 230px;
+	overflow: scroll;
+	background-color: #dbdbdb;
+	border-radius: 10px;
+	margin-bottom: 10px;
+	color: #05768c;
+	padding: 5px;
+}
+.masonry-item a {
+	color: #013b46;
+}
+.masonry {
+	margin: 0 auto;
+	padding: 0;
+	list-style: none;
+	overflow: show !important;
+	width: 100%;
+}
+.IN-widget {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
