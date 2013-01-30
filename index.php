@@ -4,6 +4,7 @@
 <html lang='en'>
 <head> 
 	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 	<link rel='stylesheet' type='text/css' href='css/endlist.css'>
 	<script src="libraries/jquery-1.9.0-min.js" type="text/javascript"></script>
