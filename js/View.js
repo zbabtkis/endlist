@@ -37,7 +37,8 @@ $(function () {
 	};
 	App = Backbone.Router.extend({
 		initialize: function () {
-			this.cat = new Category('etc'),
+			this.cat = new Category('etc');
+			this.user = new User();
 			this.settings = settings;
 			console.log('initailized');
 			this.posts = new Posts();
@@ -68,6 +69,7 @@ $(function () {
 		},
 		checkBottom: function() {
 			if($(window).scrollTop() === $(document).height() - $(window).height()) {
+				$('#content').append('<img class="loading-gif" src="css/img/359.gif" />');
 				newNum = this.loadNumber.get('count') + 30;
 				this.loadNumber.set({count:newNum});
 			}
@@ -103,9 +105,11 @@ $(function () {
 			this.listenTo(this.nav.listView,'category-clicked', this.navToCat);
 			this.listenTo(this.header, 'open-nav-request', this.nav.open);
 			this.listenTo(this.loadNumber,'change', this.loadMore);
+			this.listenTo(this.user, 'change', this.linkedInLogin);
 		},
 		renderPosts: function() {
 			this.postsList.renderPosts(this.posts, this.loadNumber.get('count'));
+			$('.loading-gif').remove();
 		},
 		loadMore: function() {
 			console.log('updated...');
@@ -113,13 +117,26 @@ $(function () {
 		},
 		index: function() {
 		},
-		INset: function() {
-			self = this;
-			IN.Event.on(IN, "auth", self.youreIN);
+		linkedInLogin: function(u) {
+			this.user.name = u.attributes.values[0].firstName;
+			this.user.uid = IN.User.getMemberId();
+			this.nav.userIn(u);
+			this.getLinkedInProfile();
+			this.listenTo(this.nav.userView, 'linkedIn-logout', this.linkedInLogout);
 		},
-		youreIN: function(y) {
-			console.log('your in!')
-			console.log(y);
+		getLinkedInProfile: function() {
+			IN.API.Profile("me","url=http://www.linkedin.com/in/" + this.user.uid)
+			    .fields("skills", "industry")
+			    .result(function(p) {
+			    	this.user.profile = p;
+			});
+		},
+		linkedInLogout: function() {
+			IN.User.logout();
+			this.user.destroy();
+			this.user = new User();
+			this.nav.userView.remove();
+			alert('you have been logged out');
 		}
 	});
 	
@@ -233,7 +250,10 @@ $(function () {
 	LinkedInLoginView = Backbone.View.extend({
 		tagName: 'script',
 		attributes: function() {
-			return {'type': 'IN/Login'};
+			return {
+				'type': 'IN/Login',
+				'data-onAuth':'onLinkedInAuth',
+			};
 		},
 	});
 	
@@ -247,6 +267,11 @@ $(function () {
 		},
 		open: function() {
 			nav.$el.slideToggle('fast','easeOutQuad');
+		},
+		userIn: function(u) {
+			this.userView = new UserView(u);
+			nav.$el.prepend(this.userView.$el);
+			this.userView.$el.slideDown('slow');
 		}
 	});
 
@@ -280,6 +305,40 @@ $(function () {
 			console.log(this);
 			this.$el.html(this.options.name);
 		},
+	});
+
+	UserView = Backbone.View.extend({
+		tagName: 'div',
+		className: 'user',
+		initialize: function(u) {
+			this.$el.html('Hello, ' + u.name + '! ');
+			logout = new UserLogout();
+			this.$el.append(logout.$el);
+		},
+		events: {
+			'click .user-logout':'logout',
+		},
+		logout: function() {
+			this.trigger('linkedIn-logout');
+		}
+	});
+
+	User = Backbone.Model.extend({
+		initialize: function() {
+		},
+	});
+
+	UserLogout = Backbone.View.extend({
+		tagName: 'a',
+		attributes: function () {
+			return {
+				'href': '#',
+				'class': 'user-logout'
+			};
+		},
+		initialize: function() {
+			this.$el.html('logout')
+		}
 	});
 
 	window.CApp = new App();
