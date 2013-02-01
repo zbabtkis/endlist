@@ -14,15 +14,20 @@
 	<script src="libraries/backbone-0.9.10-min.js" type="text/javascript"></script>
 	<script src="js/View.js" type="text/javascript"></script></head>
 	<script>
-	function InSet() {
-		IN.API.Profile("me").result( function(me) {
-		  window.CApp.user.set(me);
-		});
+	function onLinkedInLoad() {
+	     IN.Event.on(IN, "auth", login);
+	}
+	function login() {
+		IN.API.Profile("me").result(showProfile);
+	}
+	function showProfile(me) {
+		console.log('me');
+		//window.CApp.accounts.add(new Account({info: me.values[0], network: 'linkedin'}));
+	}
 	</script>
 	<script type="text/javascript" src="http://platform.linkedin.com/in.js">
 	  	api_key: 89gqf527v6qv
-	  	onLoad: InSet
-	  	authorize: true
+	  	onLoad: onLinkedInLoad
 	</script>
 <body>
 <div id='wrapper'>

@@ -38,7 +38,7 @@ $(function () {
 	App = Backbone.Router.extend({
 		initialize: function () {
 			this.cat = new Category('etc');
-			this.user = new User();
+			this.accounts = new Accounts();
 			this.settings = settings;
 			console.log('initailized');
 			this.posts = new Posts();
@@ -105,7 +105,7 @@ $(function () {
 			this.listenTo(this.nav.listView,'category-clicked', this.navToCat);
 			this.listenTo(this.header, 'open-nav-request', this.nav.open);
 			this.listenTo(this.loadNumber,'change', this.loadMore);
-			this.listenTo(this.user, 'change', this.linkedInLogin);
+			this.listenTo(this.accounts, 'add', this.login);
 		},
 		renderPosts: function() {
 			this.postsList.renderPosts(this.posts, this.loadNumber.get('count'));
@@ -117,27 +117,23 @@ $(function () {
 		},
 		index: function() {
 		},
-		linkedInLogin: function(u) {
-			this.user.name = u.attributes.values[0].firstName;
-			this.user.uid = IN.User.getMemberId();
-			this.nav.userIn(u);
-			this.getLinkedInProfile();
-			this.listenTo(this.nav.userView, 'linkedIn-logout', this.linkedInLogout);
+		login: function(u) {
+			var network = u.get('network');
+			var uid = u.get('info').id;
+			//this.nav.userIn(network);
+			this.getLinkedInProfile(uid);
+			//this.listenTo(this.nav.userView, 'linkedIn-logout', this.linkedInLogout);
 		},
-		getLinkedInProfile: function() {
-			IN.API.Profile("me","url=http://www.linkedin.com/in/" + this.user.uid)
-			    .fields("skills", "industry")
-			    .result(function(p) {
-			    	this.user.profile = p;
-			});
+		getLinkedInProfile: function(uid) {
+			console.log(this.accounts);
 		},
-		linkedInLogout: function() {
+		/*linkedInLogout: function() {
 			IN.User.logout();
 			this.user.destroy();
 			this.user = new User();
 			this.nav.userView.remove();
 			alert('you have been logged out');
-		}
+		}*/
 	});
 	
 	Post = Backbone.Model.extend({
@@ -268,11 +264,11 @@ $(function () {
 		open: function() {
 			nav.$el.slideToggle('fast','easeOutQuad');
 		},
-		userIn: function(u) {
+		/*userIn: function(u) {
 			this.userView = new UserView(u);
 			nav.$el.prepend(this.userView.$el);
 			this.userView.$el.slideDown('slow');
-		}
+		}*/
 	});
 
 	NavListView = Backbone.View.extend({
@@ -323,9 +319,11 @@ $(function () {
 		}
 	});
 
-	User = Backbone.Model.extend({
-		initialize: function() {
-		},
+	Account = Backbone.Model.extend({
+	});
+
+	Accounts = Backbone.Collection.extend({
+		model: Account
 	});
 
 	UserLogout = Backbone.View.extend({
