@@ -12,23 +12,36 @@
 	<script src="libraries/jquery-ui-1.10.0.custom.min.js" type="text/javascript"></script>
 	<script src="libraries/1-underscore-1.4.3-min.js" type="text/javascript"></script>
 	<script src="libraries/backbone-0.9.10-min.js" type="text/javascript"></script>
-	<script src="js/View.js" type="text/javascript"></script></head>
-	<script>
-	function onLinkedInLoad() {
-	     IN.Event.on(IN, "auth", login);
-	}
-	function login() {
-		IN.API.Profile("me").result(showProfile);
-	}
-	function showProfile(me) {
-		console.log('me');
-		//window.CApp.accounts.add(new Account({info: me.values[0], network: 'linkedin'}));
-	}
+	<script src="js/app.settings.js" type="text/javascript"></script>
+	<script src="js/Model.js" type="text/javascript"></script>
+	<script src="js/Collections.js" type="text/javascript"></script>
+	<script src="js/View.js" type="text/javascript"></script>
+	<script src="js/app.js" type="text/javascript"></script>
+
+	<script type="text/javascript" src="http://platform.linkedin.com/in.js">/*
+	  api_key: 89gqf527v6qv
+	  onLoad: onLinkedInLoad
+	  authorize: true
+	  scope: r_fullprofile r_emailaddress r_contactinfo
+	*/</script>
+
+	<script type="text/javascript">
+	  // 2. Runs when the JavaScript framework is loaded
+	  function onLinkedInLoad() {
+	    IN.Event.on(IN, "auth", onLinkedInAuth);
+	  }
+
+	  // 2. Runs when the viewer has authenticated
+	  function onLinkedInAuth() {
+	    IN.API.Profile("me").fields("id,firstName,lastName,skills,main-address").result(displayProfiles);
+	  }
+
+	  // 2. Runs when the Profile() API call returns successfully
+	  function displayProfiles(profiles) {
+	    window.CApp.accounts.add(profiles.values[0]);
+	  }
 	</script>
-	<script type="text/javascript" src="http://platform.linkedin.com/in.js">
-	  	api_key: 89gqf527v6qv
-	  	onLoad: onLinkedInLoad
-	</script>
+</head>
 <body>
 <div id='wrapper'>
 	<header>
