@@ -1,21 +1,14 @@
-PostFilter = Backbone.Model.extend({
-	initialize: function(e) {
-		var skills = e.skills.values;
-		skills.forEach(function(s) {
-		});
-	}
-});
-
 Account = Backbone.Model.extend({
 });
 
 Post = Backbone.Model.extend({
 	initialize: function() {
-		this.keywords = this.attributes.content.split(' ');
-		this.titleKeys = this.attributes.title.split(' ');
-
-		// @TODO set model values based on data passed from ajax rss reply
-	}
+		keywords = this.attributes.content.split(/[-\(\)\/,\s]+/);
+		titleKeys = this.attributes.title.split(/[-\(\)\/,\s]+/);
+		this.keywords = keywords.concat(titleKeys);
+		this.set('matches', 0);
+		this.matched = [];
+	},
 });
 
 Counter = Backbone.Model.extend({
@@ -27,5 +20,11 @@ Counter = Backbone.Model.extend({
 Category = Backbone.Model.extend({
 	initialize: function(cat) {
 		this.set({value:cat});
+	}
+});
+
+RSSURL = Backbone.Model.extend({
+	setValue: function() {
+		this.set('value', 'http://' + this.attributes.location + '.craigslist.org/' + this.attributes.category + '/index.rss');
 	}
 });

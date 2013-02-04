@@ -1,9 +1,19 @@
 <!DOCTYPE HTML>
-<?php //include('includes.php'); ?>
 
 <html lang='en'>
 <head> 
 	<meta name="apple-mobile-web-app-capable" content="yes" />
+	
+	<link href="img/icons/apple-touch-startup.png" media="(device-width: 320px)" rel="apple-touch-startup-image">
+	<link href="img/icons/apple-touch-startup-iphone-retina.jpg" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+	<link href="apple-touch-startup-image-ipad-portrait.png" media="(device-width: 768px) and (orientation: portrait)" rel="apple-touch-startup-image">
+	<link href="apple-touch-startup-image-ipad-landscape.png" media="(device-width: 768px) and (orientation: landscape)" rel="apple-touch-startup-image">
+	<link href="apple-touch-startup-image-ipad-portrait-retina.png" media="(device-width: 1536px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+	<link href="apple-touch-startup-image-ipad-landscape-retina.png" media="(device-width: 1536px)  and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+	
+	<link rel="apple-touch-icon" href="img/icons/apple-touch-icon-medium.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="img/icons/apple-touch-icon-medium.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="img/icons/apple-touch-icon-large.png" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 	<link rel='stylesheet' type='text/css' href='css/endlist.css'>
@@ -12,7 +22,7 @@
 	<script src="libraries/jquery-ui-1.10.0.custom.min.js" type="text/javascript"></script>
 	<script src="libraries/1-underscore-1.4.3-min.js" type="text/javascript"></script>
 	<script src="libraries/backbone-0.9.10-min.js" type="text/javascript"></script>
-	<script src="js/app.settings.js" type="text/javascript"></script>
+	<script src="js/app.settings.json"></script>
 	<script src="js/Model.js" type="text/javascript"></script>
 	<script src="js/Collections.js" type="text/javascript"></script>
 	<script src="js/View.js" type="text/javascript"></script>
@@ -20,25 +30,14 @@
 
 	<script type="text/javascript" src="http://platform.linkedin.com/in.js">/*
 	  api_key: 89gqf527v6qv
-	  onLoad: onLinkedInLoad
+	  onAuth: onLinkedInAuth
 	  authorize: true
 	  scope: r_fullprofile r_emailaddress r_contactinfo
 	*/</script>
 
 	<script type="text/javascript">
-	  // 2. Runs when the JavaScript framework is loaded
-	  function onLinkedInLoad() {
-	    IN.Event.on(IN, "auth", onLinkedInAuth);
-	  }
-
-	  // 2. Runs when the viewer has authenticated
 	  function onLinkedInAuth() {
-	    IN.API.Profile("me").fields("id,firstName,lastName,skills,main-address").result(displayProfiles);
-	  }
-
-	  // 2. Runs when the Profile() API call returns successfully
-	  function displayProfiles(profiles) {
-	    window.CApp.accounts.add(profiles.values[0]);
+	    IN.API.Profile("me").fields("id,firstName,lastName,skills,main-address").result(window.CApp.addAccount);
 	  }
 	</script>
 </head>

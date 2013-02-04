@@ -1,56 +1,20 @@
-PostsList = Backbone.View.extend({
-	initialize: function () {
-		this.$el = $('#content ul');
-		this.$el.addClass('masonry');
+ContentView = Backbone.View.extend({
+	initialize: function() {
+		this.$el = $('#content');
+	}
+});
+
+LoaderView = Backbone.View.extend({
+	tagName: 'img',
+	className: 'loading-gif',
+	attributes: function() {
+		return {
+			'src':'css/img/359.gif',
+		};
 	},
-	renderPosts: function (posts, loadNumber) {
-		// @TODO Render posts from collection into this.$el
-		for(i = loadNumber -30; i < loadNumber; i++) {
-			p = posts.models[i];
-			post = new PostView(p.attributes);
-			this.$el.append(post.$el);
-		}
-		this.$el.masonry({
-			itemSelector: '.masonry-item',
-			columnWidth: 240,
-			animationOptions: {
-		    	duration: 400
-			},
-			isAnimated: true,
-			gutterWidth: 30,
-			isResizable: true,
-			isFitWidth: true
-		});
-		this.$el.masonry( 'reload' );
-	}
 });
 
-PostView = Backbone.View.extend({
-	tagName: 'li',
-	className: 'masonry-item',
-	initialize: function() {
-		this.title = new PostTitle(this.options);
-		this.content = new PostContent(this.options);
-		this.$el.append(this.title.$el);
-		this.$el.append(this.content.$el);
-	}
-});
-
-PostTitle = Backbone.View.extend({
-	tagName: 'h3',
-	className: 'post-title',
-	initialize: function() {
-		this.$el.html('<a href="' + this.options.link + '">' + this.options.title + '</a>');
-	}
-});
-
-PostContent = Backbone.View.extend({
-	tagName: 'span',
-	className: 'post-content',
-	initialize: function() {
-		this.$el.html(this.options.content);
-	}
-});
+/** Extends Backbone View to create top header bar with button-open nav. */
 
 HeaderView = Backbone.View.extend({
 	initialize: function() {
@@ -82,15 +46,65 @@ ButtonView = Backbone.View.extend({
 	}
 });
 
-LinkedInLoginView = Backbone.View.extend({
-	tagName: 'script',
-	attributes: function() {
-		return {
-			'type': 'IN/Login',
-			'data-onAuth':'onLinkedInAuth',
-		};
+/** Creates Posts list containing a collection of Post objects */
+
+PostsList = Backbone.View.extend({
+	initialize: function () {
+		this.$el = $('#content ul');
+		this.$el.addClass('masonry');
 	},
+	renderPosts: function (posts, loadNumber) {
+		// @TODO Render posts from collection into this.$el
+		for(i = loadNumber-1; i > loadNumber-100; i--) {
+			p = posts.models[i];
+			post = new PostView(p.attributes);
+			this.$el.append(post.$el);
+		}
+		this.$el.masonry({
+			itemSelector: '.masonry-item',
+			columnWidth: 240,
+			animationOptions: {
+		    	duration: 400
+			},
+			isAnimated: true,
+			gutterWidth: 30,
+			isResizable: true,
+			isFitWidth: true
+		});
+		this.$el.masonry( 'reload' );
+	}
 });
+
+PostView = Backbone.View.extend({
+	tagName: 'li',
+	className: 'masonry-item',
+	initialize: function() {
+		this.title = new PostTitle(this.options);
+		this.content = new PostContent(this.options);
+		console.log(this);
+		this.$el.append("<strong>Matched: " + this.options.matches + "</strong>");
+		this.$el.append(this.title.$el);
+		this.$el.append(this.content.$el);
+	}
+});
+
+PostTitle = Backbone.View.extend({
+	tagName: 'h3',
+	className: 'post-title',
+	initialize: function() {
+		this.$el.html('<a href="' + this.options.link + '">' + this.options.title + '</a>');
+	}
+});
+
+PostContent = Backbone.View.extend({
+	tagName: 'span',
+	className: 'post-content',
+	initialize: function() {
+		this.$el.html(this.options.content);
+	}
+});
+
+/** View for navigation sidebar */
 
 NavView = Backbone.View.extend({
 	initialize: function() {
@@ -141,11 +155,25 @@ NavCategoryView = Backbone.View.extend({
 	},
 });
 
+/** Creates linkedin login button */
+
+LinkedInLoginView = Backbone.View.extend({
+	tagName: 'script',
+	attributes: function() {
+		return {
+			'type': 'IN/Login',
+			'data-onAuth':'onLinkedInAuth',
+		};
+	},
+});
+
+/** Secton for displaying logged in info */
+
 UserView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'user',
 	initialize: function(u) {
-		this.$el.html('Hello, ' + u.attributes.firstName + '! ');
+		this.$el.html('Hello, ' + u.attributes.profile.firstName + '! ');
 		logout = new UserLogout();
 		this.$el.append(logout.$el);
 	},
@@ -155,11 +183,6 @@ UserView = Backbone.View.extend({
 	logout: function() {
 		this.trigger('linkedIn-logout');
 	}
-});
-
-
-Accounts = Backbone.Collection.extend({
-	model: Account
 });
 
 UserLogout = Backbone.View.extend({
