@@ -12,8 +12,8 @@ awesome tool if released one day.
 Features
 ========
 
-*Craigslist sort by category
-*LinkedIn match skillset with job posts
+* Craigslist sort by category
+* LinkedIn match skillset with job posts
 
 Contributing
 ============
